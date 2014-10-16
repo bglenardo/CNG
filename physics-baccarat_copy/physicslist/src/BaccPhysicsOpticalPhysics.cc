@@ -130,29 +130,4 @@ void BaccPhysicsOpticalPhysics::ConstructProcess()
 		  pManager->AddProcess(theLuminProcess,ordDefault,ordInActive,ordDefault);
 	}
         #endif
-        #if G4VERSION_NUMBER<1000
-	theParticleIterator->reset();
-
-	while( (*theParticleIterator)() ) {
-		G4ParticleDefinition* particle = theParticleIterator->value();
-		G4String particleName = particle->GetParticleName();
-
-		pManager = particle->GetProcessManager();
-		if (!pManager) {
-			std::ostringstream o;
-			o << "Particle " << particleName << "without a Process Manager";
-			G4Exception("BaccPhysicsOpticalPhysics::ConstructProcess()","",
-			FatalException,o.str().c_str());
-		}
-
-		if( theCerenkovProcess->IsApplicable(*particle) ) {
-			pManager->AddProcess(theCerenkovProcess);
-			pManager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
-		}
-		if( theScintProcess->IsApplicable(*particle) )
-		  pManager->AddProcess(theScintProcess,ordDefault,ordInActive,ordDefault);
-		if( theLuminProcess->IsApplicable(*particle) )
-		  pManager->AddProcess(theLuminProcess,ordDefault,ordInActive,ordDefault);
-	}
-        #endif
 }
