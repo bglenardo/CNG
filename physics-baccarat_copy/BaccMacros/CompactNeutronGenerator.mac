@@ -96,6 +96,6 @@
 
 #	Use this line instead of "/run/beamOn", as there is internal bookkeeping
 #	that needs to occur before the run is started.
-/Bacc/beamOn 1000
+/Bacc/beamOn 10
 
 exit

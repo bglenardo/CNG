@@ -26,7 +26,7 @@ Change log
 #include "G4Version.hh"
 #include "G4SystemOfUnits.hh"
 
-#define DEBUGGING 0
+#define DEBUGGING 1
 //------++++++------++++++------++++++------++++++------++++++------++++++------
 //					BaccOutput()
 //------++++++------++++++------++++++------++++++------++++++------++++++------
@@ -94,6 +94,7 @@ BaccOutput::BaccOutput()
 	G4Ver = G4Ver.substr( G4Ver.find("Name:") + 6 );
 	G4Ver = G4Ver.substr( 0, G4Ver.find(" $") );
 	Size = G4Ver.length();
+        if ( DEBUGGING ) { G4cout << "G4VERSION_NUMBER" <<  G4Ver << G4endl; }
 	fBaccOutput.write((char *)(&Size), sizeof(int));
 	fBaccOutput.write((char *)(G4Ver.c_str()), Size);
 
@@ -141,7 +142,11 @@ BaccOutput::BaccOutput()
           fBaccOutput.write((char *)(SimVer.c_str()), Size);	
           is.close();
           delete[] temp1;
-	}
+	} else {
+          Size=0;
+          fBaccOutput.write((char *)(&Size), sizeof(int));
+          fBaccOutput.write("",Size);
+        }
 
 
 	TempName2 = "uname -n > " + TempName;
@@ -286,26 +291,26 @@ void BaccOutput::RecordEventByVolume( BaccDetectorComponent* component,
 
         fBaccOutput.write((char *)(&primaryParSize),sizeof(int));
 	if ( DEBUGGING ) G4cout<< "\n primaryParSize = "<< primaryParSize <<G4endl;
-	for (int m = 0; m < primaryParSize; m++ ) {
-		Size = primaryPar[m].id.length();
+	for (int mmm = 0; mmm < primaryParSize; mmm++ ) {
+		Size = primaryPar[mmm].id.length();
 		fBaccOutput.write((char *)(&Size),sizeof(int));
-		primaryParName = primaryPar[m].id;
+		primaryParName = primaryPar[mmm].id;
 		fBaccOutput.write((char *)(primaryParName.c_str()),Size);
-		primaryParEnergy_keV = primaryPar[m].energy / keV;
+		primaryParEnergy_keV = primaryPar[mmm].energy / keV;
 		fBaccOutput.write((char *)(&primaryParEnergy_keV),sizeof(double));		
-		primaryParTime_ns = primaryPar[m].time / ns;
+		primaryParTime_ns = primaryPar[mmm].time / ns;
 		fBaccOutput.write((char *)(&primaryParTime_ns),sizeof(double));
-		primaryParPos_mm[0] = primaryPar[m].position[0] / mm;
+		primaryParPos_mm[0] = primaryPar[mmm].position[0] / mm;
 		fBaccOutput.write((char *)(&primaryParPos_mm[0]),sizeof(double));	
-		primaryParPos_mm[1] = primaryPar[m].position[1] / mm;
+		primaryParPos_mm[1] = primaryPar[mmm].position[1] / mm;
 		fBaccOutput.write((char *)(&primaryParPos_mm[1]),sizeof(double));
-		primaryParPos_mm[2] = primaryPar[m].position[2] / mm;
+		primaryParPos_mm[2] = primaryPar[mmm].position[2] / mm;
 		fBaccOutput.write((char *)(&primaryParPos_mm[2]),sizeof(double));
-		primaryParDir[0] = primaryPar[m].direction[0];
+		primaryParDir[0] = primaryPar[mmm].direction[0];
 		fBaccOutput.write((char *)(&primaryParDir[0]),sizeof(double));
-		primaryParDir[1] = primaryPar[m].direction[1];
+		primaryParDir[1] = primaryPar[mmm].direction[1];
 		fBaccOutput.write((char *)(&primaryParDir[1]),sizeof(double));
-		primaryParDir[2] = primaryPar[m].direction[2];
+		primaryParDir[2] = primaryPar[mmm].direction[2];
 		fBaccOutput.write((char *)(&primaryParDir[2]),sizeof(double));
 
 		if( DEBUGGING ) {
