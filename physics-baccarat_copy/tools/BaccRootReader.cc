@@ -28,14 +28,16 @@ Change log
 //
 //	Definitions
 //
-#define DEBUGGING 0
+#define DEBUGGING 1
 
 using namespace std;
 
 //------++++++------++++++------++++++------++++++------++++++------++++++------
 int main( int argc, char** argv){
+
   
 	gROOT->GetPluginManager()->AddHandler("TVirtualStreamerInfo","*","TStreamerInfo","RIO","TStreamerInfo()");
+        // fin is the input filestream, in binary format.
 	ifstream fin;
 	char * filename = argv[1];
 	fin.open(filename,ios::binary|ios::in);
@@ -44,6 +46,8 @@ int main( int argc, char** argv){
 		exit( 0 );
 	}
 
+        // Create all the variables where we'll store the info from fin. The
+        // double *'s are set so that they can become arrays.
 	TFile* fFile;
 	TTree* fTree;
 	TTree* fTree0;
@@ -103,6 +107,8 @@ int main( int argc, char** argv){
 	double * fStepTime;
 	double fTotEnergyDep_keV=0;
 
+         
+        // Create the outfile and the trees to contain the data and the header.
 	string outfileString = filename;
 	outfileString = outfileString.substr( 0, outfileString.find_last_of('.') );
 	outfileString += ".root";
@@ -206,9 +212,13 @@ int main( int argc, char** argv){
 	int thermElecRecordLevel;
 	int Size1, Size2;
 	
+
 	fin.read((char *)(&iNumRecords), sizeof(int));
 	if( DEBUGGING ) cout<<"numRecords= "<<iNumRecords<<endl;
 
+
+        // Looks like as each thing gets written, its length gets written out first so that we
+        // know how much to read in.
 	fin.read((char *)(&Size1),sizeof(int));
 	productionTime = new char [Size1+1];
 	fin.read((char *)(productionTime),Size1);
@@ -224,7 +234,7 @@ int main( int argc, char** argv){
 	fin.read((char *)(svnVersion),Size1);
 	svnVersion[Size1] = '\0';
 	int svnVersion_int = atoi(svnVersion+10);
-	//bool has_emission_time = (svnVersion_int > 606) ? true : false;
+//	//bool has_emission_time = (svnVersion_int > 606) ? true : false;
 
 	fin.read((char *)(&Size1),sizeof(int));
 	uName = new char [Size1+1];
