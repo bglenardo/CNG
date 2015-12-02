@@ -1,4 +1,4 @@
-function [E amplitude] = EnergySpectrum3DFlatAngle(a,b,theta)
+function [E amplitude] = EnergySpectrum3D(a,b,theta)
   mxe = 131.293;
   mn  = 1.;
   En = 2.54*1000;
@@ -9,9 +9,9 @@ function [E amplitude] = EnergySpectrum3DFlatAngle(a,b,theta)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here's where we start the actual calculation of the energy spectrum.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+ %figure(1); clf;
  disp('Creating variables');
-  beta = [0:0.1:2*pi];
+  beta = [0:0.1:2*pi]; 
   gamma = [0:0.1:pi];
   
   cyllinderSurface = [];
@@ -26,7 +26,7 @@ function [E amplitude] = EnergySpectrum3DFlatAngle(a,b,theta)
       %d_str = sprintf('d = %f',d);
       %disp(d_str);
       
-      for j=1:length(gamma)
+      for j=1:4%length(gamma)
 
           %condition_str=sprintf('d*tan(gamma(j)) = %f',d*tan(gamma(j)));
           %disp(condition_str);
@@ -44,9 +44,9 @@ function [E amplitude] = EnergySpectrum3DFlatAngle(a,b,theta)
            y = y_1 + b*sin(theta);
            
           
-                      
-           %plot3(x,y,z,'.','color',[0 0.6 0.6]);
-           grid on
+           %disp('Plotting point...');       
+           plot3(x,y,z,'.','color',[0 0. 1],'markersize',15);
+           grid on;
            hold on;
          
           end
@@ -62,37 +62,36 @@ function [E amplitude] = EnergySpectrum3DFlatAngle(a,b,theta)
   
   clear x; clear y; clear d; clear z; clear gamma; clear beta;
   
-  
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here's where we start the actual calculation of the energy spectrum.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+  
   M = En * (2 * mn * mxe)/(mn + mxe)^2;
   lambda = 11.3;
 
   crossSecData = sortrows(importdata('JENDFCrossSection.txt'),1);
 
-  Theta = crossSecData(:,1)*pi/180;
-  Theta = pi./6
+  Theta = crossSecData(:,1)*pi/180; 
   %Theta = 3*pi/8;
   E = M*(1-cos(Theta));
-  crossSec = ones(length(Theta))*1000;
-  %crossSec = crossSecData(:,2);
+  %crossSec = ones(length(Theta))*1000;
+  crossSec = crossSecData(:,2);
   
   alpha = acos( ( a + b*cos(theta) )/sqrt( a^2 + b^2 + 2*a*b*cos(theta) ) );
   
   
   for i=1:length(Theta)
-     Phi = [0:0.05/sin(Theta(i)):2*pi];
+     Phi = [0:0.01/sin(Theta(i)):2*pi];
      amplitude(i)=0;
      for j=1:length(Phi)
          
-      gamma = acos(sin(Theta(i))*sin(Phi(j)));
+      gamma = asin(sin(Theta(i))*sin(Phi(j)));
 
       if Phi(j)<pi/2 | Phi(j)>3*pi/2
-       beta  = acos(cos(Theta(i))/sin(gamma)) + alpha - theta;
+       beta  = acos(cos(Theta(i))/cos(gamma)) - theta + alpha;
       else
-       beta  = -acos(cos(Theta(i))/sin(gamma)) + alpha - theta;
+       beta  = acos(cos(Theta(i))/cos(gamma)) - theta + alpha;
       end
       
       str = sprintf('Gamma: %f \t Beta: %f',gamma,beta);
@@ -100,9 +99,9 @@ function [E amplitude] = EnergySpectrum3DFlatAngle(a,b,theta)
       
       d = -b*cos(beta) + sqrt(b^2*cos(beta).^2 - (b^2 - a^2) );
 
-      if abs(d*cot(gamma)) < 25
+      if abs(d*tan(gamma)) < 25
          % disp('Inside...');
-        D = d*sqrt(1 + cot(gamma)^2);
+        D = d*sqrt(1 + tan(gamma)^2);
       else
         D = abs(25/cos(gamma));
       end
@@ -122,12 +121,12 @@ function [E amplitude] = EnergySpectrum3DFlatAngle(a,b,theta)
       
       
            
-      plot3(x,y,z,'*','color',[0.5 0 0]);
+      %plot3(x,y,z,'*','color',[0.5 0 0]);
       if mod(j,10) == 1
-       line([b*cos(theta) x],[b*sin(theta) y], [0 z],'color', [0.5 0 0]);
+       %line([b*cos(theta) x],[b*sin(theta) y], [0 z],'color', [0.5 0 0]);
       end
      
-      plot3(-(a+1),0,0,'*r','markersize',20);
+      %plot3(-(a+1),0,0,'*r','markersize',20);
       
       
      end 

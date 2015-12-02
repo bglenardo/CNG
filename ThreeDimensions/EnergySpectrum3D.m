@@ -9,9 +9,9 @@ function [E amplitude] = EnergySpectrum3D(a,b,theta)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here's where we start the actual calculation of the energy spectrum.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+ %figure(1); clf;
  disp('Creating variables');
-  beta = [0:0.1:2*pi];
+  beta = [0:0.1:2*pi]; 
   gamma = [0:0.1:pi];
   
   cyllinderSurface = [];
@@ -26,7 +26,7 @@ function [E amplitude] = EnergySpectrum3D(a,b,theta)
       %d_str = sprintf('d = %f',d);
       %disp(d_str);
       
-      for j=1:length(gamma)
+      for j=1:4%length(gamma)
 
           %condition_str=sprintf('d*tan(gamma(j)) = %f',d*tan(gamma(j)));
           %disp(condition_str);
@@ -44,9 +44,9 @@ function [E amplitude] = EnergySpectrum3D(a,b,theta)
            y = y_1 + b*sin(theta);
            
           
-                      
-           %plot3(x,y,z,'.','color',[0 0.6 0.6],'markersize',15);
-           grid on
+           %disp('Plotting point...');       
+           plot3(x,y,z,'.','color',[0 0. 1],'markersize',15);
+           grid on;
            hold on;
          
           end
@@ -62,11 +62,11 @@ function [E amplitude] = EnergySpectrum3D(a,b,theta)
   
   clear x; clear y; clear d; clear z; clear gamma; clear beta;
   
-  
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here's where we start the actual calculation of the energy spectrum.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+  
   M = En * (2 * mn * mxe)/(mn + mxe)^2;
   lambda = 11.3;
 

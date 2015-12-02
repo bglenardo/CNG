@@ -3,7 +3,7 @@ function DrawCyllinder(a,b)
   % cyllinder in spherical polar coordinates. The origin lies at the
   % hypothetical interaction point of a neutron in xenon.
   
-  theta = pi/8;
+  theta = pi;
   alpha = acos( ( a + b*cos(theta) )/sqrt( a^2 + b^2 + 2*a*b*cos(theta) ) );
   
   disp('Creating variables');
@@ -31,7 +31,7 @@ function DrawCyllinder(a,b)
            y = D*sin(gamma(j))*sin(beta(i));
            z = D*cos(gamma(j));
            
-           plot3(x,y,z,'*b');
+           plot3(x,y,z,'*r');
            grid on
            hold on;
          
