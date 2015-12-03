@@ -12,6 +12,7 @@
 import numpy as np
 from numpy import matlib as mat
 import scipy as sp
+from scipy import special
 import os
 
 def read_g4ndl( G4NDL_path, element, isotope, E_neutron_eV, cos_theta_list):
@@ -153,7 +154,7 @@ def read_g4ndl( G4NDL_path, element, isotope, E_neutron_eV, cos_theta_list):
   ll_list = np.linspace(0,np.amax(nb_of_coeff),np.amax(nb_of_coeff)+1)
   Pl_cos_theta = np.zeros((len(ll_list),len(cos_theta_list)))
   for ii_ll in range(0,len(ll_list)):
-    Pl_cos_theta[ii_ll,:] = sp.special.lpmv(0,ii_ll,cos_theta_list)
+    Pl_cos_theta[ii_ll,:] = special.lpmv(0,ii_ll,cos_theta_list)
   
   func_ll = np.zeros((len(energy_list),len(cos_theta_list)))
 
